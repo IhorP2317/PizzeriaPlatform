@@ -1,6 +1,7 @@
 package com.example.pizzerapp.Screens
 
 import android.widget.Space
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -32,19 +33,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.pizzeriapp.AppViewModelProvider
+import com.example.pizzeriapp.Database.GoodItem
 import com.example.pizzeriapp.Hardcoded.Another
 import com.example.pizzeriapp.Hardcoded.Model
 import com.example.pizzeriapp.Hardcoded.Pizza
 import com.example.pizzeriapp.Hardcoded.Rolls
 import com.example.pizzeriapp.Hardcoded.Sets
 import com.example.pizzeriapp.R
+import com.example.pizzeriapp.ViewModel.DBViewModel
 
 @Composable
-fun MenuScreen() {
+fun MenuScreen(viewModel: DBViewModel = viewModel(factory = AppViewModelProvider.Factory)) {
     Box(
         modifier = Modifier
             .background(color = Color.Black)
@@ -168,7 +174,7 @@ fun MenuScreen() {
 
                                     item ->
 
-                                ItemCard(item = item)
+                                ItemCard(item = item, viewModel)
 
                             }
                         }
@@ -181,7 +187,8 @@ fun MenuScreen() {
 }
 
 @Composable
-fun ItemCard(item : Model){
+fun ItemCard(item : Model, viewModel: DBViewModel){
+    val context = LocalContext.current
     Box(
         Modifier
             .requiredWidth(160.dp)
@@ -225,7 +232,10 @@ fun ItemCard(item : Model){
                 Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                     Text(text = item.price.toString() + " ₴", fontSize = 20.sp, color = Color.White)
                     Spacer(modifier = Modifier.weight(1f))
-                    Button(onClick = { }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
+                    Button(onClick = {
+                        Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show()
+                        viewModel.insert(item = GoodItem(title = item.title, description = item.description, image = item.image, price = item.price, weight = item.weight, isNew = item.isNew))
+                                     }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
                         Text(text = "Хочу", modifier = Modifier.padding(3.dp))
 
                     }
