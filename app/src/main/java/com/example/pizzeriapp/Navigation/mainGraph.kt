@@ -20,7 +20,7 @@ fun MainNavGraph(navController: NavHostController) {
             MenuScreen()
         }
         composable(ScreensEnum.SHOPPING_CART_SCREEN.name){
-            ShoppingCartScreen()
+            ShoppingCartScreen(navController)
         }
         composable(ScreensEnum.ORDER.name){
             OrderScreen()

@@ -17,7 +17,9 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,28 +32,32 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pizzerapp.Navigation.MainNavGraph
 import com.example.pizzerapp.Navigation.ScreensEnum
 import com.example.pizzeriapp.R
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainSetup(navController: NavHostController = rememberNavController()){
 
-    var navigationSelectedItem by remember { mutableStateOf(0) }
-
 
     Scaffold (
         bottomBar = {
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            var currentRoute = navBackStackEntry?.destination?.route
+
             NavigationBar(modifier = Modifier.height(85.dp), containerColor = Color(0xFFA000AC)){
                 bottomNavItems.forEachIndexed { index, navigationItem ->
-                    val selected = index == navigationSelectedItem
+                    val selected = navigationItem.route == currentRoute
 
-                    NavigationBarItem(selected = index == navigationSelectedItem,
+                    NavigationBarItem(selected = navigationItem.route == currentRoute,
                         onClick = {
-                            navigationSelectedItem = index
+                            currentRoute = navigationItem.route
                             navController.navigate(navigationItem.route)
                         },
                         label = {
