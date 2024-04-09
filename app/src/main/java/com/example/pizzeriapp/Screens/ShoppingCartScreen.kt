@@ -32,6 +32,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -46,6 +47,8 @@ import java.time.LocalDate
 
 @Composable
 fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)) {
+    val basketItems = viewModel.getAllSpendingItems().collectAsState(initial = listOf()).value
+
     Box(
         modifier = Modifier
             .background(color = Color.Black)
@@ -60,8 +63,78 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
             )
 
             Divider(color = Color.White, thickness = 1.dp)
-            val basketItems = viewModel.getAllSpendingItems().collectAsState(initial = listOf())
-            if (basketItems.value.isEmpty()) {
+            if (basketItems.isNotEmpty()) {
+                LazyColumn() {
+
+                    items(basketItems) { item ->
+                        BasketCard(item = item)
+
+                    }
+                    item {
+                        Column {
+
+
+                            Card(
+                                shape = RoundedCornerShape(16.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color.Magenta,
+
+                                    ),
+                                modifier = Modifier.padding(10.dp)
+                            ) {
+
+
+                                Column(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .padding(10.dp)
+                                ) {
+
+                                    Text(
+                                        text = "Набір серветок",
+                                        fontSize = 20.sp,
+                                        color = Color.White
+                                    )
+                                    Text(
+                                        text = "Вкажіть кількість осіб на скількох робите замовлення",
+                                        fontSize = 14.sp,
+                                        color = Color.White
+                                    )
+
+                                    Spacer(modifier = Modifier.height(15.dp))
+                                    Row {
+                                        Text(text = "—", color = Color.White, fontSize = 20.sp)
+                                        Text(text = "1", color = Color.White, fontSize = 20.sp)
+                                        Text(text = "+", color = Color.White, fontSize = 20.sp)
+                                    }
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(10.dp))
+                            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.End) {
+
+
+                                Text(
+                                    text = "Загальна вартість: ${
+                                        basketItems.map { it.price }.sum()
+                                    } ₴",
+                                    color = Color.White,
+                                    textAlign = TextAlign.Right,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+                                Button(
+                                    onClick = { /*TODO*/ },
+                                    colors = ButtonDefaults.buttonColors(Color.Magenta),
+                                    modifier = Modifier.padding(3.dp),
+
+                                    ) {
+                                    Text(text = "Оформити")
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else{
                 Dialog(onDismissRequest = {}) {
 
                     Card(
@@ -118,17 +191,7 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
 
                         }
                     }
-                }
-            }
-            else{
 
-                LazyColumn(){
-
-                    items(basketItems.value){
-                            item ->
-                        BasketCard(item = item)
-
-                    }
                 }
 
             }
@@ -149,30 +212,33 @@ fun BasketCard(item : GoodItem){
             Image(painter = painterResource(id = item.image), contentDescription = "pepsi")
             Column(modifier = Modifier.fillMaxHeight()) {
 
-                Text(text = item.title, modifier = Modifier.padding(10.dp))
+                Text(text = item.title, modifier = Modifier.padding(10.dp), color = Color.White)
                 Spacer(modifier = Modifier.height(55.dp))
                 Row {
-                    Text(text = "-")
-                    Text(text = "1")
-                    Text(text = "+")
+                    Text(text = "—", color = Color.White)
+                    Text(text = "1", color = Color.White)
+                    Text(text = "+", color = Color.White)
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            Column(modifier = Modifier.fillMaxHeight().padding(start = 10.dp), horizontalAlignment = Alignment.CenterHorizontally){
+            Column(modifier = Modifier
+                .fillMaxHeight()
+                .padding(start = 10.dp), horizontalAlignment = Alignment.CenterHorizontally){
 
                 Icon(
                     imageVector = Icons.Default.Clear,
                     contentDescription = "close",
-
                     modifier = Modifier
                         .padding(top = 5.dp)
                         .clickable {
                         },
+                    tint = Color.White
+
                 )
 
-                Spacer(modifier = Modifier.height(55.dp))
+                Spacer(modifier = Modifier.height(15.dp))
 
-                Text(text = item.price.toString() + " ₴", modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp))
+                Text(text = item.price.toString() + " ₴", modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp), color = Color.White)
 
 
             }
