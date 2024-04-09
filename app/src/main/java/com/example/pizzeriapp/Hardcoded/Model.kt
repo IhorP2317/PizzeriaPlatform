@@ -6,5 +6,6 @@ data class Model (
     val price : Int,
     val weight : Int,
     val description : String,
-    val isNew : Boolean
+    val isNew : Boolean,
+    val category: String
 )
