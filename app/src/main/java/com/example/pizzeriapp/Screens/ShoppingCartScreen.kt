@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -36,14 +35,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import com.example.pizzerapp.Navigation.ScreensEnum
 import com.example.pizzeriapp.AppViewModelProvider
 import com.example.pizzeriapp.Database.GoodItem
-import com.example.pizzeriapp.R
 import com.example.pizzeriapp.ViewModel.DBViewModel
-import java.time.LocalDate
 
 @Composable
 fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)) {
@@ -122,7 +118,7 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
                                     modifier = Modifier.fillMaxWidth()
                                 )
                                 Button(
-                                    onClick = { /*TODO*/ },
+                                    onClick = { navController.navigate(ScreensEnum.ORDER.name) },
                                     colors = ButtonDefaults.buttonColors(Color.Magenta),
                                     modifier = Modifier.padding(3.dp),
 
