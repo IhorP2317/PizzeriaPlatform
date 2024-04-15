@@ -1,5 +1,6 @@
 package com.example.pizzeriapp.Database
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
@@ -12,6 +13,7 @@ data class GoodItem (
     val price : Int,
     val weight : Int,
     val description : String,
+    val quantity : Int,
     val isNew : Boolean
 
 )

@@ -12,6 +12,8 @@ class OfflineFinanceItemRepository(private val financeDao: GoodDao) : GoodItemsR
 
     override fun getAllItems(): Flow<List<GoodItem>> = financeDao.getAllItems()
 
-    override fun getItem(id: Int): Flow<GoodItem>  = financeDao.getItem(id)
+    override fun countByTitle(title: String): Int = financeDao.countByTitle(title)
+
+    override suspend fun deleteItemsWithDuplicateDescriptions() = financeDao.deleteItemsWithDuplicateDescriptions()
 
 }

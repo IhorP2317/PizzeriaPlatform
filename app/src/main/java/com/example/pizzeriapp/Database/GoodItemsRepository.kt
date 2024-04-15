@@ -15,7 +15,8 @@ interface GoodItemsRepository {
 
     fun getAllItems() : Flow<List<GoodItem>>
 
-    fun getItem(id : Int) : Flow<GoodItem>
+    fun countByTitle(title: String): Int
 
+    suspend fun deleteItemsWithDuplicateDescriptions()
 
 }

@@ -43,6 +43,7 @@ import com.example.pizzeriapp.ViewModel.DBViewModel
 
 @Composable
 fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = androidx.lifecycle.viewmodel.compose.viewModel(factory = AppViewModelProvider.Factory)) {
+    viewModel.deleteDuplicate()
     val basketItems = viewModel.getAllSpendingItems().collectAsState(initial = listOf()).value
 
     Box(
@@ -63,7 +64,7 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
                 LazyColumn() {
 
                     items(basketItems) { item ->
-                        BasketCard(item = item)
+                        BasketCard(item = item, viewModel)
 
                     }
                     item {
@@ -99,9 +100,9 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
 
                                     Spacer(modifier = Modifier.height(15.dp))
                                     Row {
-                                        Text(text = "—", color = Color.White, fontSize = 20.sp)
+                                        Text(text = "—", color = Color.White, fontSize = 20.sp, modifier = Modifier.clickable {  })
                                         Text(text = "1", color = Color.White, fontSize = 20.sp)
-                                        Text(text = "+", color = Color.White, fontSize = 20.sp)
+                                        Text(text = "+", color = Color.White, fontSize = 20.sp, modifier = Modifier.clickable {  })
                                     }
                                 }
                             }
@@ -111,7 +112,7 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
 
                                 Text(
                                     text = "Загальна вартість: ${
-                                        basketItems.map { it.price }.sum()
+                                        basketItems.map { it.price * it.quantity }.sum()
                                     } ₴",
                                     color = Color.White,
                                     textAlign = TextAlign.Right,
@@ -196,14 +197,15 @@ fun ShoppingCartScreen(navController: NavController, viewModel: DBViewModel = an
 }
 
 @Composable
-fun BasketCard(item : GoodItem){
-    Card (shape = RoundedCornerShape(16.dp),
+fun BasketCard(item : GoodItem, viewModel: DBViewModel){
+
+
+        Card (shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
             containerColor = Color.Magenta,
 
         ),
-        modifier = Modifier.padding(10.dp)){
-
+        modifier = Modifier.padding(10.dp)) {
         Row {
             Image(painter = painterResource(id = item.image), contentDescription = "pepsi")
             Column(modifier = Modifier.fillMaxHeight()) {
@@ -211,15 +213,24 @@ fun BasketCard(item : GoodItem){
                 Text(text = item.title, modifier = Modifier.padding(10.dp), color = Color.White)
                 Spacer(modifier = Modifier.height(55.dp))
                 Row {
-                    Text(text = "—", color = Color.White)
-                    Text(text = "1", color = Color.White)
-                    Text(text = "+", color = Color.White)
+                    Text(text = "—", color = Color.White, modifier = Modifier.clickable {
+                        if(item.quantity > 1) {
+                            viewModel.updateItem(item, -1)
+                        }
+                    })
+                    Text(text = item.quantity.toString(), color = Color.White)
+                    Text(text = "+", color = Color.White, modifier = Modifier.clickable {
+                        viewModel.updateItem(item, 1)
+
+                    })
                 }
             }
             Spacer(modifier = Modifier.weight(1f))
-            Column(modifier = Modifier
-                .fillMaxHeight()
-                .padding(start = 10.dp), horizontalAlignment = Alignment.CenterHorizontally){
+            Column(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(start = 10.dp), horizontalAlignment = Alignment.CenterHorizontally
+            ) {
 
                 Icon(
                     imageVector = Icons.Default.Clear,
@@ -227,6 +238,7 @@ fun BasketCard(item : GoodItem){
                     modifier = Modifier
                         .padding(top = 5.dp)
                         .clickable {
+                            item.id?.let { viewModel.delete(it) }
                         },
                     tint = Color.White
 
@@ -234,7 +246,11 @@ fun BasketCard(item : GoodItem){
 
                 Spacer(modifier = Modifier.height(15.dp))
 
-                Text(text = item.price.toString() + " ₴", modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp), color = Color.White)
+                Text(
+                    text = "${item.price * item.quantity} ₴",
+                    modifier = Modifier.padding(vertical = 5.dp, horizontal = 10.dp),
+                    color = Color.White
+                )
 
 
             }

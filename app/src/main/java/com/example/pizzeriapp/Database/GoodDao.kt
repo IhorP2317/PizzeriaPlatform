@@ -20,11 +20,12 @@ interface GoodDao {
 
     @Query("DELETE FROM GoodTable")
     suspend fun  deleteAll()
-    @Query("SELECT * FROM GoodTable")
+    @Query("SELECT DISTINCT id, title, price, weight, image, description, quantity, isNew FROM GoodTable")
     fun getAllItems() : Flow<List<GoodItem>>
 
 
-    @Query("SELECT * FROM GoodTable WHERE id == :id")
-    fun getItem(id : Int) : Flow<GoodItem>
-
+    @Query("SELECT COUNT(*) FROM GoodTable WHERE title = :title")
+    fun countByTitle(title: String): Int
+    @Query("DELETE FROM GoodTable WHERE title IN (SELECT title FROM GoodTable GROUP BY description HAVING COUNT(*) > 1)")
+    suspend fun deleteItemsWithDuplicateDescriptions()
 }

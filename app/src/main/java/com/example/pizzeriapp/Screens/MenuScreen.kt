@@ -228,7 +228,7 @@ fun ItemCard(item : Model, viewModel: DBViewModel){
                     Spacer(modifier = Modifier.weight(1f))
                     Button(onClick = {
                         Toast.makeText(context, "Added", Toast.LENGTH_SHORT).show()
-                        viewModel.insert(item = GoodItem(title = item.title, description = item.description, image = item.image, price = item.price, weight = item.weight, isNew = item.isNew))
+                        viewModel.insert(item = GoodItem(title = item.title, description = item.description, image = item.image, price = item.price, weight = item.weight,  isNew = item.isNew, quantity = 1))
                                      }, colors = ButtonDefaults.buttonColors(Color.Magenta)) {
                         Text(text = "Хочу", modifier = Modifier.padding(3.dp))
 

@@ -17,7 +17,7 @@ fun NavGraphBuilder.authNavGraph(navController: NavHostController) {
             SignUpScreen { navController.navigate(ScreensEnum.SIGN_IN.name) }
         }
         composable(ScreensEnum.SIGN_IN.name){
-            SignInScreen { navController.navigate(Graphs.MAIN) }
+            SignInScreen(navController)
         }
     }
 }
